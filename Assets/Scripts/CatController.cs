@@ -9,22 +9,35 @@ public class CatController : MonoBehaviour {
     public float pawSize = 16f;
     public float pawStrength = 15f;
     public float pawHitCooldown;
+    public bool active = true;
 
     public GameObject paw;
 
     private float pawHitCooldownTimer = 0f;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    private Collider2D coll;
 
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        coll = GetComponent<Collider2D>();
 	}
 
     bool CanJump()
     {
-        return true;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
+        if (hit.collider != null)
+        {
+            Debug.Log(hit.distance);
+            if (hit.distance < coll.bounds.extents.y + 0.1f)
+            {
+                Debug.Log(hit.collider.transform.name);
+                return true;
+            }
+        }
+        return false;
     }
 
     void Jump()
@@ -34,11 +47,13 @@ public class CatController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if (!active)
+            return;
         transform.Translate(Vector2.right * Input.GetAxis("Horizontal") * Time.deltaTime * speed);
         pawHitCooldownTimer -= Time.deltaTime;
         if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.2f)
         {
-            transform.localScale = new Vector2((Input.GetAxis("Horizontal") < 0) ? 1 : -1, 1f);
+            transform.localScale = new Vector3((Input.GetAxis("Horizontal") < 0) ? 1 : -1, 1f, 1f);
         }
         if (Input.GetKeyDown("space"))
         {
@@ -47,7 +62,7 @@ public class CatController : MonoBehaviour {
                 Jump();
             }
         }
-        if (Input.GetKeyDown("f"))
+        if (Input.GetKey("f"))
         {
             if (pawHitCooldownTimer <= 0f)
             {
@@ -56,35 +71,18 @@ public class CatController : MonoBehaviour {
                 {
                     if (other.transform.tag == "Movable")
                     {
-                        print("Found movable object");
-                        Rigidbody2D other_rb = other.GetComponent<Rigidbody2D>();
-                        if (other_rb != null)
-                        {
-                            Vector2 direction;
-                            if (other.transform.position.x > paw.transform.position.x)
-                            {
-                                direction = Vector2.right;
-                            }
-                            else
-                            {
-                                direction = Vector2.left;
-                            }
-                            print("Adding force");
-                            other_rb.AddForce(direction * pawStrength);
-                            other_rb.AddForce(Vector2.up * pawStrength);
-                        }
+                        TilemapManager tmm = other.transform.parent.GetComponent<TilemapManager>();
+                        Vector2Int boxPos = tmm.GetTilePosFromTransformPos(other.transform.position);
+                        Vector2Int boxDest;
+                        if (other.transform.position.x > transform.position.x)
+                            boxDest = boxPos + Vector2Int.right;
                         else
-                        {
-                            print("Warning: Object tagged as movable doesn't have rigidbody2d");
-                        }
+                            boxDest = boxPos + Vector2Int.left;
+                        tmm.Map.MoveBox(boxPos.x, boxPos.y, boxDest.x, boxDest.y);
+                        break;
                     }
                 }
             }
         }
 	}
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(paw.transform.position, pawSize);
-    }
 }

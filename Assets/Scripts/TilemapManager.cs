@@ -8,7 +8,12 @@ public class TilemapManager : MonoBehaviour {
     public GameObject crate;
     public GameObject tile;
     public int UpdatesPerSecond;
-    public Sprite[] tileTypeSprites;
+    public GameObject background;
+    public Sprite buttonPressedSprite;
+    public Sprite buttonNotPressedSprite;
+    public Sprite wallSprite;
+    public CatController player;
+    public GameObject winText;
 
     private List<GameObject> boxes = new List<GameObject>();
     private List<GameObject> tiles = new List<GameObject>();
@@ -17,6 +22,11 @@ public class TilemapManager : MonoBehaviour {
 	void Start () {
 		
 	}
+
+    public Vector2Int GetTilePosFromTransformPos(Vector3 pos)
+    {
+        return new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+    }
 
     void RenderMap()
     {
@@ -36,13 +46,24 @@ public class TilemapManager : MonoBehaviour {
         {
             boxes[i].transform.position = new Vector2(boxPositions[i].x, boxPositions[i].y);
         }
-        while (tiles.Count < Map.tiles.Length)
+        int emptyTiles = 0;
+        for (int x = 0; x < Map.tiles.GetLength(0); x++)
+        {
+            for (int y = 0; y < Map.tiles.GetLength(1); y++)
+            {
+                if (Map.tiles[x, y].type == Tile.TileType.EMPTY)
+                {
+                    emptyTiles += 1;
+                }
+            }
+        }
+        while (tiles.Count + emptyTiles < Map.tiles.Length)
         {
             GameObject newTile = Instantiate(tile);
             tiles.Add(newTile);
             newTile.transform.parent = transform;
         }
-        while (tiles.Count > Map.tiles.Length)
+        while (tiles.Count + emptyTiles > Map.tiles.Length)
         {
             Destroy(tiles[0]);
         }
@@ -51,13 +72,32 @@ public class TilemapManager : MonoBehaviour {
         {
             for (int y = 0; y < Map.tiles.GetLength(1); y++)
             {
-                bool active = Map.tiles[x, y].type == Tile.TileType.EMPTY;
-                tiles[n].SetActive(active);
-                if (!active)
+                if (Map.tiles[x, y].type == Tile.TileType.EMPTY)
                     continue;
+                if (Map.tiles[x, y].type == Tile.TileType.BUTTON)
+                    tiles[n].GetComponent<Collider2D>().enabled = false;
+                else
+                    tiles[n].GetComponent<Collider2D>().enabled = true;
+                tiles[n].name = Map.tiles[x, y].type.ToString();
+                bool active = Map.tiles[x, y].type != Tile.TileType.EMPTY;
                 tiles[n].transform.position = new Vector2(x, y);
-                tiles[n].GetComponent<SpriteRenderer>().sprite = tileTypeSprites[(int)Map.tiles[x, y].type];
+                SpriteRenderer renderer = tiles[n].GetComponent<SpriteRenderer>();
                 n++;
+                switch (Map.tiles[x, y].type)
+                {
+                    case Tile.TileType.BUTTON:
+                        if (Map.tiles[x, y].box != null)
+                        {
+                            renderer.sprite = buttonPressedSprite;
+                        } else
+                        {
+                            renderer.sprite = buttonNotPressedSprite;
+                        }
+                        break;
+                    case Tile.TileType.WALL:
+                        renderer.sprite = wallSprite;
+                        break;
+                }
             }
         }
     }
@@ -66,9 +106,16 @@ public class TilemapManager : MonoBehaviour {
         timeSinceLastTilemapStep += Time.deltaTime;
         if (timeSinceLastTilemapStep > 1f / UpdatesPerSecond)
         {
+            background.transform.position = new Vector3(Map.tiles.GetLength(0) / 2, Map.tiles.GetLength(1) / 2, 1f);
+            background.transform.localScale = new Vector3(Map.tiles.GetLength(0), Map.tiles.GetLength(1), 1f);
             timeSinceLastTilemapStep = 0;
             Map.Step();
             RenderMap();
+            if (Map.won)
+            {
+                player.active = false;
+                winText.SetActive(true);
+            }
         }
 	}
 }

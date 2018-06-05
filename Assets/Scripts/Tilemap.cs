@@ -9,15 +9,12 @@ public class Tile
         WALL,
         BUTTON,
         EMPTY,
-        DOOR
     }
     public TileType type;
-    public int state;
     public Box box;
-    public Tile(TileType type, int state = 0)
+    public Tile(TileType type)
     {
         this.type = type;
-        state = 0;
     }
 
     public override string ToString()
@@ -34,8 +31,6 @@ public class Tile
                 return "[]";
             case TileType.WALL:
                 return "#";
-            case TileType.DOOR:
-                return "+";
             default:
                 return "E";
         }
@@ -46,6 +41,8 @@ public class Tilemap {
 
     public Tile[,] tiles;
     public List<Box> boxes = new List<Box>();
+    public int buttonsToWin = 1;
+    public bool won = false;
 
     public Tilemap(int xs, int ys)
     {
@@ -79,31 +76,35 @@ public class Tilemap {
         MoveBox(x, y, x + (directionRight ? 1 : -1), y);
     }
 
+    public void SetTile(int x, int y, Tile.TileType type, bool box=false)
+    {
+        tiles[x, y] = new Tile(type);
+        Debug.Log("Adding tile at " + x + ", " + y + " box: " + box);
+        if (box)
+        {
+            tiles[x, y].box = new Box();
+        }
+    }
+
+    public void SetBoxTiles(int fx, int fy, int tx, int ty, Tile.TileType type, bool box=false)
+    {
+        for (int x = fx; x <= tx; x++)
+        {
+            for (int y = fy; y <= ty; y++)
+            {
+                SetTile(x, y, type, box);
+            }
+        }
+    }
+
     public void MoveBox(int fx, int fy, int tx, int ty)
     {
         if (IsCollidable(tx, ty))
         {
-            Debug.Log("Can't move, collider under me");
             return;
         }
-        Debug.Log("Moving box");
         tiles[tx, ty].box = tiles[fx, fy].box;
         tiles[fx, fy].box = null;
-        UpdateState(tx, ty);
-    }
-
-    public int UpdateState(int x, int y)
-    {
-        switch (tiles[x, y].type)
-        {
-            case Tile.TileType.BUTTON:
-                tiles[x, y].state = tiles[x, y].box == null ? 0 : 1;
-                break;
-            default:
-                tiles[x, y].state = 0;
-                break;
-        }
-        return tiles[x, y].state;
     }
 
     public override string ToString()
@@ -134,15 +135,12 @@ public class Tilemap {
         {
             return true;
         }
-        if (tiles[x, y].type == Tile.TileType.DOOR)
-        {
-            return true;
-        }
         return false;
     }
 
     public void Step()
     {
+        int pressedButtons = 0;
         for (int x = 0; x < tiles.GetLength(0); x++)
         {
             for (int y = 0; y < tiles.GetLength(1); y++)
@@ -151,8 +149,11 @@ public class Tilemap {
                 {
                     MoveBox(x, y, x, y - 1);
                 }
+                if (tiles[x, y].type == Tile.TileType.BUTTON && tiles[x, y].box != null)
+                    pressedButtons += 1;
             }
         }
+        won = pressedButtons >= buttonsToWin;
     }
 }
 
