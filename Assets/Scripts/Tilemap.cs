@@ -79,7 +79,6 @@ public class Tilemap {
     public void SetTile(int x, int y, Tile.TileType type, bool box=false)
     {
         tiles[x, y] = new Tile(type);
-        Debug.Log("Adding tile at " + x + ", " + y + " box: " + box);
         if (box)
         {
             tiles[x, y].box = new Box();

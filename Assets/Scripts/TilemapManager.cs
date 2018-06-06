@@ -28,6 +28,20 @@ public class TilemapManager : MonoBehaviour {
         return new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
     }
 
+    public void ClearTiles()
+    {
+        foreach (GameObject tile in tiles)
+        {
+            Destroy(tile);
+        }
+        foreach (GameObject box in boxes)
+        {
+            Destroy(box);
+        }
+        tiles = new List<GameObject>();
+        boxes = new List<GameObject>();
+    }
+
     void RenderMap()
     {
         List<Vector2Int> boxPositions = Map.GetBoxPositions();
@@ -36,11 +50,11 @@ public class TilemapManager : MonoBehaviour {
             GameObject newBox = Instantiate(crate);
             boxes.Add(newBox);
             newBox.transform.parent = transform;
-
         }
         while (boxes.Count > boxPositions.Count)
         {
             Destroy(boxes[0]);
+            boxes.RemoveAt(0);
         }
         for (int i = 0; i < boxPositions.Count; i++)
         {
@@ -66,6 +80,7 @@ public class TilemapManager : MonoBehaviour {
         while (tiles.Count + emptyTiles > Map.tiles.Length)
         {
             Destroy(tiles[0]);
+            tiles.RemoveAt(0);
         }
         int n = 0;
         for (int x = 0; x < Map.tiles.GetLength(0); x++)

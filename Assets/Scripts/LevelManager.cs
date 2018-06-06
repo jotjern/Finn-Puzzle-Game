@@ -8,26 +8,45 @@ public class LevelManager : MonoBehaviour {
     public CatController player;
     public int level = -1;
 
+    private bool winCoroutineStarted = false;
+
     public enum Level
     {
         Sample,
-        Level1
+        Level1,
+        Level2,
     }
 
 	void Start () {
-        tilemapRenderer.Map = LoadLevel(Level.Level1);
+        tilemapRenderer.Map = LoadLevel(Level.Sample);
+        level = 0;
     }
 	
 	void Update () {
-        if (tilemapRenderer.Map.won)
+        if (!winCoroutineStarted && tilemapRenderer.Map.won)
         {
-            //StartCoroutine(WinInSeconds(3f));
+            StartCoroutine(WinInSeconds(3f));
+        }
+        if (Input.GetKeyDown("r"))
+        {
+            tilemapRenderer.ClearTiles();
+            tilemapRenderer.Map = LoadLevel(Level.Sample);
+            tilemapRenderer.winText.SetActive(false);
+            player.active = true;
         }
 	}
 
-    IEnumerable WinInSeconds(float seconds)
+    IEnumerator WinInSeconds(float seconds)
     {
-        yield return new WaitForSeconds(seconds);
+        winCoroutineStarted = true;
+        yield return new WaitForSeconds(seconds);        
+        level += 1;
+        tilemapRenderer.ClearTiles();
+        tilemapRenderer.Map = LoadLevel((Level)(level));
+        tilemapRenderer.Map.won = false;
+        tilemapRenderer.winText.SetActive(false);
+        player.active = true;
+		winCoroutineStarted = false;
 
     }
 
@@ -38,10 +57,9 @@ public class LevelManager : MonoBehaviour {
         {
             case Level.Sample:
                 Map = new Tilemap(16, 16);
-                Map.SetBoxTiles(0, 15, 3, 15, Tile.TileType.EMPTY, true);
-                Map.SetBoxTiles(0, 12, 3, 12, Tile.TileType.EMPTY, true);
-                Map.SetBoxTiles(0, 10, 3, 10, Tile.TileType.EMPTY, true);
-                Map.SetBoxTiles(0, 5, 5, 5, Tile.TileType.WALL);
+                Map.SetTile(0, 0, Tile.TileType.WALL);
+                Map.SetTile(0, 1, Tile.TileType.BUTTON);
+                Map.SetTile(0, 2, Tile.TileType.EMPTY, true);
                 break;
             case Level.Level1:
                 Debug.Log("Loading level 1");
@@ -63,6 +81,14 @@ public class LevelManager : MonoBehaviour {
                 Map.SetTile(16, 5, Tile.TileType.WALL);
                 Map.SetBoxTiles(10, 7, 15, 7, Tile.TileType.WALL);
                 Map.SetBoxTiles(10, 8, 10, 9, Tile.TileType.EMPTY, true);
+                break;
+            case Level.Level2:
+                Debug.Log("Loading level 2");
+                Map = new Tilemap(5, 5);
+                Map.buttonsToWin = 1;
+                Map.SetBoxTiles(0, 0, 4, 0, Tile.TileType.WALL);
+                Map.SetTile(0, 1, Tile.TileType.EMPTY, true);
+                Map.SetTile(0, 1, Tile.TileType.BUTTON, false);
                 break;
             default:
                 Debug.Log("Attempted to load invalid level");

@@ -30,10 +30,8 @@ public class CatController : MonoBehaviour {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
         if (hit.collider != null)
         {
-            Debug.Log(hit.distance);
             if (hit.distance < coll.bounds.extents.y + 0.1f)
             {
-                Debug.Log(hit.collider.transform.name);
                 return true;
             }
         }
@@ -42,7 +40,7 @@ public class CatController : MonoBehaviour {
 
     void Jump()
     {
-        rb.AddForce(Vector2.up * jumpForce);
+        rb.velocity = Vector2.up * jumpForce;
     }
 
 	// Update is called once per frame
@@ -55,7 +53,7 @@ public class CatController : MonoBehaviour {
         {
             transform.localScale = new Vector3((Input.GetAxis("Horizontal") < 0) ? 1 : -1, 1f, 1f);
         }
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKey("space"))
         {
             if (CanJump())
             {
