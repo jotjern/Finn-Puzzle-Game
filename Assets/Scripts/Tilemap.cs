@@ -48,10 +48,11 @@ public class Tilemap {
 
     public Tile[,] tiles;
     public List<Box> boxes = new List<Box>();
-    public int buttonsToWin = 1;
+    public int buttonsToWin;
+	public Vector2 playerStartPos;
     public bool won = false;
 
-    public Tilemap(int xs, int ys)
+	public Tilemap(int xs, int ys, int buttonsToWin = 1, Vector2? playerStartPos = null)
     {
         tiles = new Tile[xs, ys];
         for (int x = 0; x < xs; x++)
@@ -61,7 +62,17 @@ public class Tilemap {
                 tiles[x, y] = new Tile(Tile.TileType.EMPTY);
             }
         }
+		this.buttonsToWin = buttonsToWin;
+		this.playerStartPos = playerStartPos.GetValueOrDefault(new Vector2(3f, 3f));
     }
+
+	public void addDoor(Vector2Int button, params Vector2Int[] doors) {
+		foreach (Vector2Int d in doors) {
+			tiles [d.x, d.y] = new Tile (Tile.TileType.DOOR);
+			tiles[d.x, d.y].buttonPos = new Vector2Int(button.x, button.y);
+		}
+		tiles [button.x, button.y] = new Tile (Tile.TileType.BUTTONBLUE);
+	}
 
     public List<Vector2Int> GetBoxPositions()
     {

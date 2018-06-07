@@ -377,18 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemapRenderer: {fileID: 661581973}
   player: {fileID: 170243651}
-  startPositions:
-  - {x: 0, y: 0}
-  - {x: 9, y: 5}
-  - {x: 2, y: 12}
-  - {x: 3, y: 12}
-  - {x: 9, y: 5}
-  - {x: 9, y: 5}
-  - {x: 9, y: 5}
-  - {x: 9, y: 5}
-  - {x: 9, y: 5}
-  - {x: 9, y: 5}
-  level: -1
+  level: 4
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

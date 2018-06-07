@@ -11,16 +11,16 @@ public class CatTimer : MonoBehaviour {
     private float timeleft = 3;
     private bool disabled = false;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         cat.active = false;
         disabled = false;
         timeleft = 3;
         timer.text = string.Format(".2f", timeleft);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+    
+    // Update is called once per frame
+    void Update () {
         timeleft -= Time.deltaTime;
         
         if (timeleft < 0f && !disabled)
@@ -35,5 +35,5 @@ public class CatTimer : MonoBehaviour {
         {
             timer.text = string.Format("{0:0.00}", timeleft);
         }
-	}
+    }
 }

@@ -70,12 +70,7 @@ public class CatController : MonoBehaviour {
                     {
                         TilemapManager tmm = other.transform.parent.GetComponent<TilemapManager>();
                         Vector2Int boxPos = tmm.GetTilePosFromTransformPos(other.transform.position);
-                        Vector2Int boxDest;
-                        if (other.transform.position.x > transform.position.x)
-                            boxDest = boxPos + Vector2Int.right;
-                        else
-                            boxDest = boxPos + Vector2Int.left;
-                        tmm.Map.MoveBox(boxPos.x, boxPos.y, boxDest.x, boxDest.y);
+						tmm.Map.PushBox(boxPos.x, boxPos.y, other.transform.position.x > transform.position.x);
                         break;
                     }
                 }
