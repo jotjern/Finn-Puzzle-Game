@@ -155,4 +155,15 @@ public class TilemapTests {
 		Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
 		Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
 	}
+
+    [Test]
+    public void TestPushTwoStepBoxCollideNeighbours()
+    {
+        Tilemap tilemap = new Tilemap(3, 3);
+        tilemap.tiles[0, 0].box = new Box(2);
+        tilemap.tiles[1, 0].box = new Box(2);
+        tilemap.PushBox(0, 0, true);
+        Assert.IsNotNull(tilemap.tiles[0, 0].box, tilemap.ToString());
+        Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
+    }
 }

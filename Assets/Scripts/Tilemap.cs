@@ -49,8 +49,13 @@ public class Tilemap {
     public Tile[,] tiles;
     public List<Box> boxes = new List<Box>();
     public int buttonsToWin;
+    List<Vector2Int> pressedButtons = new List<Vector2Int> ();
 	public Vector2 playerStartPos;
-    public bool won = false;
+
+    public enum GAME_EVENT {
+        BUTTON_PRESS,
+        BOX_FALL,
+    }
 
 	public Tilemap(int xs, int ys, int buttonsToWin = 1, Vector2? playerStartPos = null)
     {
@@ -90,14 +95,25 @@ public class Tilemap {
         return res;
     }
 
-    public void PushBox(int x, int y, bool directionRight) {
+    public bool PushBox(int x, int y, bool directionRight) {
 		int s = 0;
 		int xmod = (directionRight ? 1 : -1);
-		while (isInBounds (x, y) && tiles[x,y].box != null && s < tiles[x,y].box.steps) {
-			MoveBox(x, y, x + xmod, y);
+
+        bool moved = false;
+
+        if (!isInBounds (x, y) || tiles [x, y].box == null) {
+            return false;
+        }
+
+        Box b = tiles [x, y].box;
+
+        while (isInBounds (x, y) && tiles[x,y].box == b && s < tiles[x,y].box.steps) {
+			moved |= MoveBox(x, y, x + xmod, y);
 			s++;
 			x += xmod;
 		}
+
+        return moved;
     }
 
     public void SetTile(int x, int y, Tile.TileType type, bool box=false)
@@ -176,22 +192,43 @@ public class Tilemap {
         return false;
     }
 
-    public void Step()
+    public bool isWon() {
+        return pressedButtons.FindAll(delegate(Vector2Int pos) { return tiles[pos.x, pos.y].type == Tile.TileType.BUTTON; }).Count == buttonsToWin;
+    }
+
+    public HashSet<GAME_EVENT> Step()
     {
-        int pressedButtons = 0;
+        HashSet<GAME_EVENT> ret = new HashSet<GAME_EVENT> ();
+        List<Vector2Int> prevPressedButtons = pressedButtons;
+        pressedButtons = new List<Vector2Int>();
         for (int x = 0; x < tiles.GetLength(0); x++)
         {
             for (int y = 0; y < tiles.GetLength(1); y++)
             {
                 if (tiles[x, y].box != null)
                 {
-                    MoveBox(x, y, x, y - 1);
+                    if (MoveBox(x, y, x, y - 1) && IsCollidable (x, y - 2)) {
+                        ret.Add (GAME_EVENT.BOX_FALL);
+                    }
                 }
-                if (tiles[x, y].type == Tile.TileType.BUTTON && tiles[x, y].box != null)
-                    pressedButtons += 1;
+                if ((tiles [x, y].type == Tile.TileType.BUTTON || tiles[x,y].type == Tile.TileType.BUTTONBLUE) && tiles [x, y].box != null) {
+                    pressedButtons.Add (new Vector2Int (x, y));
+                }
             }
         }
-        won = pressedButtons >= buttonsToWin;
+            
+        if (prevPressedButtons.Count != pressedButtons.Count) {
+            ret.Add (GAME_EVENT.BUTTON_PRESS);
+        } else {
+            foreach (Vector2Int pos in prevPressedButtons) {
+                if (!pressedButtons.Contains (pos)) {
+                    ret.Add (GAME_EVENT.BUTTON_PRESS);
+                    break;
+                }
+            }
+        }
+
+        return ret;
     }
 }
 

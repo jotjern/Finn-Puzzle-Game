@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     void Update () {
-        if (!winCoroutineStarted && tilemapRenderer.Map.won)
+        if (!winCoroutineStarted && tilemapRenderer.Map.isWon())
         {
             StartCoroutine(WinInSeconds(3f));
         }

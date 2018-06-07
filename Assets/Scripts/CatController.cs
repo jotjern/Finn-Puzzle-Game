@@ -11,6 +11,7 @@ public class CatController : MonoBehaviour {
     public float pawHitCooldown;
     public bool active = true;
     public float timeSinceLevelLoad;
+    public AudioClip moveSound;
 
     public GameObject paw;
     public Rigidbody2D rb;
@@ -70,7 +71,10 @@ public class CatController : MonoBehaviour {
                     {
                         TilemapManager tmm = other.transform.parent.GetComponent<TilemapManager>();
                         Vector2Int boxPos = tmm.GetTilePosFromTransformPos(other.transform.position);
-						tmm.Map.PushBox(boxPos.x, boxPos.y, other.transform.position.x > transform.position.x);
+                        if (tmm.Map.PushBox (boxPos.x, boxPos.y, other.transform.position.x > transform.position.x)) {
+                            GetComponent<AudioSource> ().clip = moveSound;
+                            GetComponent<AudioSource> ().Play ();
+                        }
                         break;
                     }
                 }
