@@ -113,4 +113,46 @@ public class TilemapTests {
         Assert.IsNull(tilemap.tiles[7, 9].box, tilemap.ToString());
         Assert.IsNotNull(tilemap.tiles[6, 9].box, tilemap.ToString());
     }
+
+	[Test]
+	public void TestPushTwoStep()
+	{
+		Tilemap tilemap = new Tilemap(3, 3);
+		tilemap.tiles[0, 0].box = new Box(2);
+		tilemap.PushBox(0, 0, true);
+		Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
+		Assert.IsNotNull(tilemap.tiles[2, 0].box, tilemap.ToString());
+	}
+
+	[Test]
+	public void TestPushTwoStepStop()
+	{
+		Tilemap tilemap = new Tilemap(3, 3);
+		tilemap.tiles[0, 0].box = new Box(2);
+		tilemap.tiles[2, 0].type = Tile.TileType.WALL;
+		tilemap.PushBox(0, 0, true);
+		Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
+		Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
+	}
+
+	[Test]
+	public void TestPushTwoStepBoxCollide()
+	{
+		Tilemap tilemap = new Tilemap(3, 3);
+		tilemap.tiles[0, 0].box = new Box(2);
+		tilemap.tiles[2, 0].box = new Box(2);
+		tilemap.PushBox(0, 0, true);
+		Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
+		Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
+	}
+
+	[Test]
+	public void TestPushTwoStepBounds()
+	{
+		Tilemap tilemap = new Tilemap(2, 3);
+		tilemap.tiles[0, 0].box = new Box(2);
+		tilemap.PushBox(0, 0, true);
+		Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
+		Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
+	}
 }

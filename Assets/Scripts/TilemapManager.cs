@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class TilemapManager : MonoBehaviour {
 
@@ -60,9 +62,13 @@ public class TilemapManager : MonoBehaviour {
             Destroy(boxes[0]);
             boxes.RemoveAt(0);
         }
+
         for (int i = 0; i < boxPositions.Count; i++)
         {
             boxes[i].transform.position = new Vector2(boxPositions[i].x, boxPositions[i].y);
+			int steps = Map.tiles [boxPositions [i].x, boxPositions [i].y].box.steps;
+
+			boxes [i].gameObject.GetComponentInChildren<TMP_Text> ().text = steps == 1 ? "" : string.Format("{0}", steps);
         }
         int emptyTiles = 0;
         for (int x = 0; x < Map.tiles.GetLength(0); x++)

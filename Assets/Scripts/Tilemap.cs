@@ -80,7 +80,13 @@ public class Tilemap {
     }
 
     public void PushBox(int x, int y, bool directionRight) {
-        MoveBox(x, y, x + (directionRight ? 1 : -1), y);
+		int s = 0;
+		int xmod = (directionRight ? 1 : -1);
+		while (isInBounds (x, y) && tiles[x,y].box != null && s < tiles[x,y].box.steps) {
+			MoveBox(x, y, x + xmod, y);
+			s++;
+			x += xmod;
+		}
     }
 
     public void SetTile(int x, int y, Tile.TileType type, bool box=false)
@@ -103,14 +109,15 @@ public class Tilemap {
         }
     }
 
-    public void MoveBox(int fx, int fy, int tx, int ty)
+	public bool MoveBox(int fx, int fy, int tx, int ty)
     {
         if (IsCollidable(tx, ty))
         {
-            return;
+            return false;
         }
         tiles[tx, ty].box = tiles[fx, fy].box;
         tiles[fx, fy].box = null;
+		return true;
     }
 
     public override string ToString()
@@ -127,9 +134,13 @@ public class Tilemap {
         return ret;
     }
 
+	public bool isInBounds(int x, int y) {
+		return 0 <= x && x < tiles.GetLength (0) && 0 <= y && y < tiles.GetLength (1);
+	}
+
     public bool IsCollidable(int x, int y)
     {
-        if (x < 0 || x >= tiles.GetLength(0) || y < 0 || y >= tiles.GetLength(1))
+		if (!isInBounds(x, y))
         {
             return true;
         }
@@ -175,5 +186,8 @@ public class Tilemap {
 
 public class Box
 {
-
+	public int steps;
+	public Box (int s = 1) {
+		steps = s;
+	}
 }
