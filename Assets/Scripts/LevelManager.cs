@@ -17,11 +17,12 @@ public class LevelManager : MonoBehaviour {
         Level2,
         Level3,
         Level4,
+        Level5,
+        Level6
     }
 		
     void Start () {
         level = SceneMgr.startLevel;
-        level = 1;
         LoadLevel(level);
     }
 
@@ -150,6 +151,46 @@ public class LevelManager : MonoBehaviour {
                 Map.tiles [3, 1].box = new Box (1);
                 Map.tiles [5, 1].box = new Box (2);
 
+
+                break;
+            case Level.Level5:
+                Map = new Tilemap(16, 16, 1, new Vector2Int(3, 12));
+                Map.SetBoxTiles(0, 8, 5, 8, Tile.TileType.WALL);
+                Map.SetTile(6, 4, Tile.TileType.WALL);
+                Map.SetTile(5, 4, Tile.TileType.WALL);
+                Map.SetBoxTiles(7, 5, 9, 5, Tile.TileType.WALL);
+                Map.SetTile(9, 3, Tile.TileType.WALL);
+                Map.SetTile(12, 3, Tile.TileType.WALL);
+                Map.SetTile(10, 2, Tile.TileType.WALL);
+                Map.SetTile(11, 2, Tile.TileType.WALL);
+                Map.SetTile(10, 3, Tile.TileType.BUTTON);
+                Map.addDoor(new Vector2Int(9, 12), new Vector2Int(2, 9), new Vector2Int(11, 6));
+                Map.SetTile(8, 12, Tile.TileType.EMPTY, true);
+                Map.SetBoxTiles(7, 11, 12, 11, Tile.TileType.WALL);
+                Map.SetTile(3, 10, Tile.TileType.WALL);
+                Map.tiles[3, 11].box = new Box(2);
+                break;
+
+            case Level.Level6:
+                Map = new Tilemap(16, 16, 2, new Vector2Int(6, 12));
+
+                Map.SetTile(4, 13, Tile.TileType.EMPTY, true);
+                Map.tiles[6, 12].box = new Box(2);
+                Map.SetTile(4, 12, Tile.TileType.WALL);
+                Map.SetTile(3, 12, Tile.TileType.WALL);
+                Map.SetTile(6, 11, Tile.TileType.WALL);
+                Map.SetTile(7, 11, Tile.TileType.WALL);
+                Map.SetTile(4, 9, Tile.TileType.WALL);
+                Map.SetTile(4, 8, Tile.TileType.WALL);
+                Map.SetTile(6, 8, Tile.TileType.WALL);
+                Map.SetTile(7, 9, Tile.TileType.WALL);
+                Map.SetTile(8, 9, Tile.TileType.WALL);
+                Map.addDoor(new Vector2Int(7, 10), new Vector2Int(5, 8));
+                Map.SetTile(4, 5, Tile.TileType.WALL);
+                Map.SetBoxTiles(7, 5, 11, 5, Tile.TileType.WALL);
+                Map.SetBoxTiles(4, 4, 7, 4, Tile.TileType.WALL);
+                Map.SetTile(7, 6, Tile.TileType.BUTTON);
+                Map.SetTile(5, 5, Tile.TileType.BUTTON);
 
                 break;
 
