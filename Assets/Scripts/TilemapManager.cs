@@ -12,6 +12,10 @@ public class TilemapManager : MonoBehaviour {
     public Sprite buttonPressedSprite;
     public Sprite buttonNotPressedSprite;
     public Sprite wallSprite;
+    public Sprite doorSprite;
+    public Sprite doorSpriteOpen;
+    public Sprite buttonPressedSpriteBlue;
+	public Sprite buttonNotPressedSpriteBlue;
     public CatController player;
     public GameObject winText;
 
@@ -89,7 +93,7 @@ public class TilemapManager : MonoBehaviour {
             {
                 if (Map.tiles[x, y].type == Tile.TileType.EMPTY)
                     continue;
-                if (Map.tiles[x, y].type == Tile.TileType.BUTTON)
+                if (Map.tiles[x, y].type == Tile.TileType.BUTTON || Map.tiles[x, y].type == Tile.TileType.BUTTONBLUE)
                     tiles[n].GetComponent<Collider2D>().enabled = false;
                 else
                     tiles[n].GetComponent<Collider2D>().enabled = true;
@@ -97,6 +101,7 @@ public class TilemapManager : MonoBehaviour {
                 bool active = Map.tiles[x, y].type != Tile.TileType.EMPTY;
                 tiles[n].transform.position = new Vector2(x, y);
                 SpriteRenderer renderer = tiles[n].GetComponent<SpriteRenderer>();
+                Collider2D collider = tiles[n].GetComponent<Collider2D>();
                 n++;
                 switch (Map.tiles[x, y].type)
                 {
@@ -107,6 +112,28 @@ public class TilemapManager : MonoBehaviour {
                         } else
                         {
                             renderer.sprite = buttonNotPressedSprite;
+                        }
+                        break;
+                    case Tile.TileType.BUTTONBLUE:
+                        if (Map.tiles[x, y].box != null)
+                        {
+                            renderer.sprite = buttonPressedSpriteBlue;
+                        }
+                        else
+                        {
+                            renderer.sprite = buttonNotPressedSpriteBlue;
+                        }
+                        break;
+                    case Tile.TileType.DOOR:
+                        Vector2Int buttonPos = Map.tiles[x, y].buttonPos;
+                        if (Map.tiles[buttonPos.x, buttonPos.y].box == null)
+                        {
+                            renderer.sprite = doorSprite;
+                            collider.enabled = true;
+                        } else
+                        {
+                            renderer.sprite = doorSpriteOpen;
+                            collider.enabled = false;
                         }
                         break;
                     case Tile.TileType.WALL:

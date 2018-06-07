@@ -7,11 +7,14 @@ public class Tile
     public enum TileType
     {
         WALL,
+        DOOR,
         BUTTON,
+        BUTTONBLUE,
         EMPTY,
     }
     public TileType type;
     public Box box;
+    public Vector2Int buttonPos;
     public Tile(TileType type)
     {
         this.type = type;
@@ -31,6 +34,10 @@ public class Tile
                 return "[]";
             case TileType.WALL:
                 return "#";
+            case TileType.BUTTONBLUE:
+                return "P";
+            case TileType.DOOR:
+                return "=";
             default:
                 return "E";
         }
@@ -133,6 +140,16 @@ public class Tilemap {
         if (tiles[x, y].type == Tile.TileType.WALL)
         {
             return true;
+        }
+        if (tiles[x, y].type == Tile.TileType.DOOR)
+        {
+            Debug.Log("Checking if door collidable");
+            Vector2Int buttonPos = tiles[x, y].buttonPos;
+            if (tiles[buttonPos.x, buttonPos.y].box == null)
+            {
+                return true;
+            }
+            return false;
         }
         return false;
     }

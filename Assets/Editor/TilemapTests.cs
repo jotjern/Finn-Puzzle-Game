@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine.TestTools;
 using NUnit.Framework;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -64,5 +65,52 @@ public class TilemapTests {
         {
             Assert.IsNotNull(LevelManager.LoadLevel(level));
         }
+    }
+    [Test]
+    public void TestPushRightOutBounds()
+    {
+        Tilemap tilemap = new Tilemap(2, 2);
+        tilemap.tiles[1, 0].box = new Box();
+        tilemap.PushBox(1, 0, true);
+        Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
+    }
+    [Test]
+    public void TestPushLeftOutBounds()
+    {
+        Tilemap tilemap = new Tilemap(2, 2);
+        tilemap.tiles[0, 0].box = new Box();
+        tilemap.PushBox(0, 0, false);
+        Assert.IsNotNull(tilemap.tiles[0, 0].box, tilemap.ToString());
+    }
+
+    [Test]
+    public void TestDoorPassThrough()
+    {
+        Tilemap tilemap = new Tilemap(16, 16);
+        tilemap.SetBoxTiles(0, 8, 15, 8, Tile.TileType.WALL);
+        tilemap.SetTile(7, 9, Tile.TileType.DOOR);
+        tilemap.tiles[7, 9].buttonPos = new Vector2Int(4, 9);
+        tilemap.SetTile(6, 9, Tile.TileType.EMPTY, true);
+        tilemap.SetTile(4, 9, Tile.TileType.BUTTONBLUE);
+        tilemap.SetTile(4, 10, Tile.TileType.EMPTY, true);
+        tilemap.Step();
+        tilemap.PushBox(6, 9, true);
+        Assert.IsNotNull(tilemap.tiles[7, 9].box, tilemap.ToString());
+        Assert.IsNull(tilemap.tiles[6, 9].box, tilemap.ToString());
+    }
+
+    [Test]
+    public void TestDoorNotPassThrough()
+    {
+        Tilemap tilemap = new Tilemap(16, 16);
+        tilemap.SetBoxTiles(0, 8, 15, 8, Tile.TileType.WALL);
+        tilemap.SetTile(7, 9, Tile.TileType.DOOR);
+        tilemap.tiles[7, 9].buttonPos = new Vector2Int(4, 9);
+        tilemap.SetTile(6, 9, Tile.TileType.EMPTY, true);
+        tilemap.SetTile(4, 9, Tile.TileType.BUTTONBLUE);
+        tilemap.Step();
+        tilemap.PushBox(6, 9, true);
+        Assert.IsNull(tilemap.tiles[7, 9].box, tilemap.ToString());
+        Assert.IsNotNull(tilemap.tiles[6, 9].box, tilemap.ToString());
     }
 }
