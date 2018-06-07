@@ -20,6 +20,7 @@ public class TilemapManager : MonoBehaviour {
 	public Sprite buttonNotPressedSpriteBlue;
     public CatController player;
     public GameObject winText;
+    public bool pauseUpdates = false;
 
     private List<GameObject> boxes = new List<GameObject>();
     private List<GameObject> tiles = new List<GameObject>();
@@ -50,6 +51,10 @@ public class TilemapManager : MonoBehaviour {
 
     void RenderMap()
     {
+        if (pauseUpdates)
+        {
+            return;
+        }
         List<Vector2Int> boxPositions = Map.GetBoxPositions();
         while (boxes.Count < boxPositions.Count)
         {

@@ -10,18 +10,17 @@ public class CatController : MonoBehaviour {
     public float pawStrength = 15f;
     public float pawHitCooldown;
     public bool active = true;
+    public float timeSinceLevelLoad;
 
     public GameObject paw;
     public Rigidbody2D rb;
 
     private float pawHitCooldownTimer = 0f;
-    private SpriteRenderer spriteRenderer;
     private Collider2D coll;
 
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         coll = GetComponent<Collider2D>();
 	}
 

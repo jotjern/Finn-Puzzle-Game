@@ -17,12 +17,10 @@ public class LevelManager : MonoBehaviour {
         Level1,
         Level2,
         Level3,
-        Level4,
-        Level5
     }
 
 	void Start () {
-        level = 1;
+        level = SceneMgr.startLevel;
         LoadLevel(level);
     }
 
@@ -33,18 +31,26 @@ public class LevelManager : MonoBehaviour {
         }
         if (Input.GetKeyDown("r"))
         {
-            LoadLevel(level);
+            RestartLevel();
         }
 	}
 
+    public void RestartLevel()
+    {
+        LoadLevel(level);
+    }
+
     void LoadLevel(Level level)
     {
+        tilemapRenderer.pauseUpdates = true;
         tilemapRenderer.ClearTiles();
         tilemapRenderer.Map = _LoadLevel(level);
         tilemapRenderer.winText.SetActive(false);
         player.transform.position = startPositions[(int)level];
         player.rb.velocity = Vector2.zero;
         player.active = true;
+        player.timeSinceLevelLoad = 0;
+        tilemapRenderer.pauseUpdates = false;
     }
 
     void LoadLevel(int level)
