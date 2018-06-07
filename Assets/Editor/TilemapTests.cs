@@ -63,7 +63,7 @@ public class TilemapTests {
     {
         foreach (LevelManager.Level level in System.Enum.GetValues(typeof(LevelManager.Level)))
         {
-            Assert.IsNotNull(LevelManager.LoadLevel(level));
+            Assert.IsNotNull(LevelManager._LoadLevel(level));
         }
     }
     [Test]

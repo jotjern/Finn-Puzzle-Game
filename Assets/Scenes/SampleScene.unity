@@ -156,7 +156,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 170243650}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ce1a9e126376694eb45330af01a9632, type: 3}
   m_Name: 
@@ -423,6 +423,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemapRenderer: {fileID: 661581973}
   player: {fileID: 170243651}
+  startPositions:
+  - {x: 0, y: 0}
+  - {x: 9, y: 5}
+  - {x: 2, y: 12}
+  - {x: 3, y: 12}
+  - {x: 9, y: 5}
+  - {x: 9, y: 5}
+  - {x: 9, y: 5}
+  - {x: 9, y: 5}
+  - {x: 9, y: 5}
+  - {x: 9, y: 5}
   level: -1
 --- !u!1 &519420028
 GameObject:
@@ -911,7 +922,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1508033952
 RectTransform:
   m_ObjectHideFlags: 0

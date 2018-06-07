@@ -12,9 +12,9 @@ public class CatController : MonoBehaviour {
     public bool active = true;
 
     public GameObject paw;
+    public Rigidbody2D rb;
 
     private float pawHitCooldownTimer = 0f;
-    private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private Collider2D coll;
 
