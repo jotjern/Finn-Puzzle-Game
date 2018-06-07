@@ -15,6 +15,7 @@ public class Tile
     public TileType type;
     public Box box;
     public Vector2Int buttonPos;
+
     public Tile(TileType type)
     {
         this.type = type;
@@ -42,6 +43,7 @@ public class Tile
                 return "E";
         }
     }
+
 }
 
 public class Tilemap {
@@ -55,6 +57,13 @@ public class Tilemap {
     public enum GAME_EVENT {
         BUTTON_PRESS,
         BOX_FALL,
+    }
+
+    public enum DIRECTION {
+        DOWN,
+        RIGHT,
+        LEFT,
+        NONE
     }
 
 	public Tilemap(int xs, int ys, int buttonsToWin = 1, Vector2? playerStartPos = null)
@@ -101,14 +110,14 @@ public class Tilemap {
 
         bool moved = false;
 
-        if (!isInBounds (x, y) || tiles [x, y].box == null) {
+        if (!isInBounds (x, y) || tiles [x, y].box == null || !tiles[x,y].box.doAction()) {
             return false;
         }
 
         Box b = tiles [x, y].box;
 
         while (isInBounds (x, y) && tiles[x,y].box == b && s < tiles[x,y].box.steps) {
-			moved |= MoveBox(x, y, x + xmod, y);
+            moved |= MoveBox(x, y, directionRight ? DIRECTION.RIGHT : DIRECTION.LEFT);
 			s++;
 			x += xmod;
 		}
@@ -136,8 +145,10 @@ public class Tilemap {
         }
     }
 
-	public bool MoveBox(int fx, int fy, int tx, int ty)
+    public bool MoveBox(int fx, int fy, DIRECTION dir)
     {
+        int tx = fx + (dir == DIRECTION.DOWN ? 0 : (dir == DIRECTION.RIGHT ? 1 : -1));
+        int ty = fy + (dir == DIRECTION.DOWN ? -1 : 0);
         if (IsCollidable(tx, ty))
         {
             return false;
@@ -196,7 +207,7 @@ public class Tilemap {
         return pressedButtons.FindAll(delegate(Vector2Int pos) { return tiles[pos.x, pos.y].type == Tile.TileType.BUTTON; }).Count == buttonsToWin;
     }
 
-    public HashSet<GAME_EVENT> Step()
+    public HashSet<GAME_EVENT> Step(float dt)
     {
         HashSet<GAME_EVENT> ret = new HashSet<GAME_EVENT> ();
         List<Vector2Int> prevPressedButtons = pressedButtons;
@@ -207,8 +218,12 @@ public class Tilemap {
             {
                 if (tiles[x, y].box != null)
                 {
-                    if (MoveBox(x, y, x, y - 1) && IsCollidable (x, y - 2)) {
-                        ret.Add (GAME_EVENT.BOX_FALL);
+                    bool readyToStep = tiles [x, y].box.step (dt);
+                    if (readyToStep && MoveBox(x, y, DIRECTION.DOWN)) {
+                        tiles [x, y-1].box.doAction ();
+                        if (IsCollidable (x, y - 2)) {
+                            ret.Add (GAME_EVENT.BOX_FALL);
+                        }
                     }
                 }
                 if ((tiles [x, y].type == Tile.TileType.BUTTON || tiles[x,y].type == Tile.TileType.BUTTONBLUE) && tiles [x, y].box != null) {
@@ -235,7 +250,23 @@ public class Tilemap {
 public class Box
 {
 	public int steps;
+    public float actionTimer = 0f;
+    public static readonly float ACTIONTHRESHOLD = 0.001f;
 	public Box (int s = 1) {
 		steps = s;
 	}
+
+    public bool step(float dt) {
+        actionTimer = Mathf.Max (0, actionTimer - dt);
+
+        return actionTimer < ACTIONTHRESHOLD;
+    }
+
+    public bool doAction() {
+        if (actionTimer < ACTIONTHRESHOLD) {
+            actionTimer = 1f / 3;
+            return true;
+        }
+        return false;
+    }
 }

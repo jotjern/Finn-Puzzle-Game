@@ -11,7 +11,7 @@ public class TilemapTests {
     {
         Tilemap tilemap = new Tilemap(2, 2);
         tilemap.tiles[0, 1].box = new Box();
-        tilemap.Step();
+        tilemap.Step(1f);
         Assert.IsNotNull(tilemap.tiles[0, 0].box);
         Assert.IsNull(tilemap.tiles[0, 1].box);
     }
@@ -21,7 +21,7 @@ public class TilemapTests {
         Tilemap tilemap = new Tilemap(2, 2);
         tilemap.tiles[0, 1].box = new Box();
         tilemap.tiles[0, 0].box = new Box();
-        tilemap.Step();
+        tilemap.Step(1f);
         Assert.IsNotNull(tilemap.tiles[0, 0].box, tilemap.ToString());
         Assert.IsNotNull(tilemap.tiles[0, 1].box, tilemap.ToString());
         Assert.AreNotSame(tilemap.tiles[0, 0].box, tilemap.tiles[0, 1].box, tilemap.ToString());
@@ -32,7 +32,7 @@ public class TilemapTests {
         Tilemap tilemap = new Tilemap(2, 2);
         tilemap.tiles[0, 1].box = new Box();
         tilemap.tiles[0, 0] = new Tile(Tile.TileType.WALL);
-        tilemap.Step();
+        tilemap.Step(1f);
         Assert.IsNotNull(tilemap.tiles[0, 1].box, tilemap.ToString());
         Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
     }
@@ -43,7 +43,7 @@ public class TilemapTests {
         Tilemap tilemap = new Tilemap(2, 2);
         tilemap.tiles[0, 1].box = new Box();
         tilemap.tiles[0, 0] = new Tile(Tile.TileType.WALL);
-        tilemap.Step();
+        tilemap.Step(1f);
         Assert.IsNotNull(tilemap.tiles[0, 1].box, tilemap.ToString());
         Assert.IsNull(tilemap.tiles[0, 0].box, tilemap.ToString());
     }
@@ -93,7 +93,7 @@ public class TilemapTests {
         tilemap.SetTile(6, 9, Tile.TileType.EMPTY, true);
         tilemap.SetTile(4, 9, Tile.TileType.BUTTONBLUE);
         tilemap.SetTile(4, 10, Tile.TileType.EMPTY, true);
-        tilemap.Step();
+        tilemap.Step(1f);
         tilemap.PushBox(6, 9, true);
         Assert.IsNotNull(tilemap.tiles[7, 9].box, tilemap.ToString());
         Assert.IsNull(tilemap.tiles[6, 9].box, tilemap.ToString());
@@ -108,7 +108,7 @@ public class TilemapTests {
         tilemap.tiles[7, 9].buttonPos = new Vector2Int(4, 9);
         tilemap.SetTile(6, 9, Tile.TileType.EMPTY, true);
         tilemap.SetTile(4, 9, Tile.TileType.BUTTONBLUE);
-        tilemap.Step();
+        tilemap.Step(1f);
         tilemap.PushBox(6, 9, true);
         Assert.IsNull(tilemap.tiles[7, 9].box, tilemap.ToString());
         Assert.IsNotNull(tilemap.tiles[6, 9].box, tilemap.ToString());
@@ -165,5 +165,21 @@ public class TilemapTests {
         tilemap.PushBox(0, 0, true);
         Assert.IsNotNull(tilemap.tiles[0, 0].box, tilemap.ToString());
         Assert.IsNotNull(tilemap.tiles[1, 0].box, tilemap.ToString());
+    }
+
+    [Test]
+    public void TestSteppedGravity()
+    {
+        Tilemap tilemap = new Tilemap(2, 3);
+        tilemap.tiles[0, 2].box = new Box();
+        tilemap.Step(0.1f);
+        Assert.IsNotNull(tilemap.tiles[0, 1].box);
+        Assert.IsNull(tilemap.tiles[0, 2].box);
+        tilemap.Step(0.1f);
+        Assert.IsNotNull(tilemap.tiles[0, 1].box);
+        tilemap.Step(0.5f);
+        Assert.IsNotNull(tilemap.tiles[0, 0].box);
+        Assert.IsNull(tilemap.tiles[0, 1].box);
+        Assert.IsNull(tilemap.tiles[0, 2].box);
     }
 }

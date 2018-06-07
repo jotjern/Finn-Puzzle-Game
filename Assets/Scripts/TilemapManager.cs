@@ -25,7 +25,6 @@ public class TilemapManager : MonoBehaviour {
 
     private List<GameObject> boxes = new List<GameObject>();
     private List<GameObject> tiles = new List<GameObject>();
-    private float timeSinceLastTilemapStep = Mathf.Infinity;
 
 	void Start () {
 		
@@ -157,29 +156,24 @@ public class TilemapManager : MonoBehaviour {
     }
 	
 	void Update () {
-        timeSinceLastTilemapStep += Time.deltaTime;
-        if (timeSinceLastTilemapStep > 1f / UpdatesPerSecond)
+        background.transform.position = new Vector3(Map.tiles.GetLength(0) / 2, Map.tiles.GetLength(1) / 2, 1f);
+        background.transform.localScale = new Vector3(Map.tiles.GetLength(0), Map.tiles.GetLength(1), 1f);
+        HashSet<Tilemap.GAME_EVENT> events = Map.Step(Time.deltaTime);
+        if (events.Contains (Tilemap.GAME_EVENT.BOX_FALL)) {
+            GameObject go = transform.Find ("fall").gameObject;
+            go.GetComponent<AudioSource> ().clip = fallSound;
+            go.GetComponent<AudioSource> ().Play ();
+        }
+        if (events.Contains (Tilemap.GAME_EVENT.BUTTON_PRESS)) {
+            GameObject go = transform.Find ("click").gameObject;
+            go.GetComponent<AudioSource> ().clip = pressButtonSound;
+            go.GetComponent<AudioSource> ().Play ();  
+        }
+        RenderMap();
+        if (Map.isWon())
         {
-            background.transform.position = new Vector3(Map.tiles.GetLength(0) / 2, Map.tiles.GetLength(1) / 2, 1f);
-            background.transform.localScale = new Vector3(Map.tiles.GetLength(0), Map.tiles.GetLength(1), 1f);
-            timeSinceLastTilemapStep = 0;
-            HashSet<Tilemap.GAME_EVENT> events = Map.Step();
-            if (events.Contains (Tilemap.GAME_EVENT.BOX_FALL)) {
-                GameObject go = transform.Find ("fall").gameObject;
-                go.GetComponent<AudioSource> ().clip = fallSound;
-                go.GetComponent<AudioSource> ().Play ();
-            }
-            if (events.Contains (Tilemap.GAME_EVENT.BUTTON_PRESS)) {
-                GameObject go = transform.Find ("click").gameObject;
-                go.GetComponent<AudioSource> ().clip = pressButtonSound;
-                go.GetComponent<AudioSource> ().Play ();  
-            }
-            RenderMap();
-            if (Map.isWon())
-            {
-                player.active = false;
-                winText.SetActive(true);
-            }
+            player.active = false;
+            winText.SetActive(true);
         }
 	}
 }
