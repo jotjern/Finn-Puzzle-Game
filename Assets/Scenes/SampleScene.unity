@@ -150,6 +150,7 @@ MonoBehaviour:
   pawHitCooldown: 0.2
   active: 1
   paw: {fileID: 1174104200}
+  rb: {fileID: 0}
 --- !u!114 &170243652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,7 +624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81fcff8ba152bc46a20565fd74c37b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crate: {fileID: 1551863645118206, guid: 572a2c27d4055d8448b599897b4ba55d, type: 2}
+  crate: {fileID: 1152412712521816, guid: 572a2c27d4055d8448b599897b4ba55d, type: 2}
   tile: {fileID: 1151416127136934, guid: cd776d0472c328e4b8929b5f02d6cc6f, type: 2}
   UpdatesPerSecond: 8
   background: {fileID: 1441076136}
