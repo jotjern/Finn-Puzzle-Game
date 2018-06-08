@@ -16,6 +16,7 @@ public class CatController : MonoBehaviour {
 
     public GameObject paw;
     public Rigidbody2D rb;
+    public Animator anim;
 
     private float pawHitCooldownTimer = 0f;
     private Collider2D coll;
@@ -24,6 +25,7 @@ public class CatController : MonoBehaviour {
 	void Start () {
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<Collider2D>();
+        anim = GetComponent<Animator>();
 	}
 
     bool CanJump()
@@ -47,21 +49,25 @@ public class CatController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (!active)
+        {
+            anim.SetBool("Walking", false);
             return;
+        }
+        anim.SetBool("Walking", Mathf.Abs(Input.GetAxis("Horizontal")) > 0.2f);
         transform.Translate(Vector2.right * Input.GetAxis("Horizontal") * Time.deltaTime * speed);
         pawHitCooldownTimer -= Time.deltaTime;
         if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.2f)
         {
             transform.localScale = new Vector3((Input.GetAxis("Horizontal") < 0) ? 1 : -1, 1f, 1f);
         }
-        if (Input.GetKey("space"))
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W))
         {
             if (CanJump())
             {
                 Jump();
             }
         }
-        if (Input.GetKey("f"))
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.F))
         {
             if (pawHitCooldownTimer <= 0f)
             {

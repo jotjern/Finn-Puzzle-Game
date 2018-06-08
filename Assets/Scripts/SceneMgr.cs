@@ -9,12 +9,12 @@ public class SceneMgr : MonoBehaviour {
 
     public void LoadMenuScene()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void LoadLevel(int level)
     {
         startLevel = level;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }

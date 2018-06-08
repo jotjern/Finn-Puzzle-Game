@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 
     public TilemapManager tilemapRenderer;
+    public SceneMgr sceneMgr;
     public CatController player;
     public int level = -1;
 
@@ -20,7 +21,8 @@ public class LevelManager : MonoBehaviour {
         Level3,
         Level4,
         Level5,
-        Level6
+        Level6,
+        GameFinish
     }
 		
     void Start () {
@@ -53,6 +55,11 @@ public class LevelManager : MonoBehaviour {
 
     void LoadLevel(Level level)
     {
+        if (level == Level.GameFinish)
+        {
+            sceneMgr.LoadMenuScene();
+            return;
+        }
         tilemapRenderer.pauseUpdates = true;
         tilemapRenderer.ClearTiles();
         tilemapRenderer.setLevel(_LoadLevel(level));
@@ -187,6 +194,7 @@ public class LevelManager : MonoBehaviour {
                 Map.SetBoxTiles(7, 11, 12, 11, Tile.TileType.WALL);
                 Map.SetTile(3, 10, Tile.TileType.WALL);
                 Map.tiles[3, 11].box = new Box(2);
+                Map.SetTile(5, 11, Tile.TileType.WALL);
                 break;
 
             case Level.Level6:
