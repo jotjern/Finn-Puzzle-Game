@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour {
         Level4,
         Level5,
         Level6,
+        EndLevel,
         GameFinish
     }
 		
@@ -220,6 +221,55 @@ public class LevelManager : MonoBehaviour {
 
                 break;
 
+            case Level.EndLevel:
+                Map = new Tilemap (50, 50, 1);
+
+                Map.SetBoxTiles (0, 0, 49, 0, Tile.TileType.WALL);
+
+
+                // F
+                Map.SetBoxTiles (2, 2, 2, 5, Tile.TileType.WALL);
+                Map.SetBoxTiles (2, 6, 6, 6, Tile.TileType.WALL);
+                Map.SetBoxTiles (2, 4, 4, 4, Tile.TileType.WALL);
+
+
+                // i
+                Map.SetBoxTiles (8, 2, 8, 4, Tile.TileType.WALL);
+                Map.SetBoxTiles (8, 6, 8, 6, Tile.TileType.WALL);
+
+                // n
+                Map.SetBoxTiles (10, 2, 10, 4, Tile.TileType.WALL);
+                Map.SetBoxTiles (11, 5, 12, 5, Tile.TileType.WALL); 
+                Map.SetBoxTiles (13, 2, 13, 4, Tile.TileType.WALL);
+
+                // n
+                Map.SetBoxTiles (15, 2, 15, 4, Tile.TileType.WALL);
+                Map.SetBoxTiles (16, 5, 17, 5, Tile.TileType.WALL); 
+                Map.SetBoxTiles (18, 2, 18, 4, Tile.TileType.WALL);
+
+                // .
+
+                Map.SetTile (20, 2, Tile.TileType.BUTTON);
+                Map.SetTile (20, 1, Tile.TileType.WALL);
+                Map.tiles [20, 21].box = new Box ();
+
+                // n
+                Map.SetBoxTiles (22, 2, 22, 4, Tile.TileType.WALL);
+                Map.SetBoxTiles (23, 5, 24, 5, Tile.TileType.WALL); 
+                Map.SetBoxTiles (25, 2, 25, 4, Tile.TileType.WALL);
+
+                Map.tiles [24, 1].box = new Box ();
+                Map.addDoor (new Vector2Int (25, 1), new Vector2Int (20, 20));
+
+                // o
+                Map.SetBoxTiles (27, 3, 27, 4, Tile.TileType.WALL);
+                Map.SetBoxTiles (28, 5, 29, 5, Tile.TileType.WALL); 
+                Map.SetBoxTiles (28, 2, 29, 2, Tile.TileType.WALL); 
+                Map.SetBoxTiles (30, 3, 30, 4, Tile.TileType.WALL);
+             
+
+
+                break;
             default:
                 Debug.Log("Attempted to load invalid level");
                 Map = null;
