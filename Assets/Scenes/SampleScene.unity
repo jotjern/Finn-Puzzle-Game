@@ -1673,7 +1673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmm: {fileID: 661581973}
-  timerText: {fileID: 486803463}
+  timerText: {fileID: 1508033953}
   catTimer: {fileID: 170243652}
   text: {fileID: 2012706763}
   enableTimer: {fileID: 155456962}

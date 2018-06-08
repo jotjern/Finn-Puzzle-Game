@@ -177,7 +177,7 @@ public class TilemapManager : MonoBehaviour {
 	
 	void Update () {
         background.transform.position = new Vector3(Map.tiles.GetLength(0) / 2, Map.tiles.GetLength(1) / 2, 1f);
-        background.transform.localScale = new Vector3(Map.tiles.GetLength(0), Map.tiles.GetLength(1), 1f);
+        background.transform.localScale = new Vector3(Map.tiles.GetLength(0) + 0.5f, Map.tiles.GetLength(1) + 0.5f, 1f);
         HashSet<Tilemap.GAME_EVENT> events = Map.Step(Time.deltaTime);
         if (events.Contains (Tilemap.GAME_EVENT.BOX_FALL)) {
             StartCoroutine (PlaySound (fallSound, transform.Find ("fall").gameObject.GetComponent<AudioSource> ()));
