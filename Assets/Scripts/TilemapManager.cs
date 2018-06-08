@@ -6,7 +6,7 @@ using TMPro;
 
 public class TilemapManager : MonoBehaviour {
 
-    public Tilemap Map;
+    private Tilemap Map;
     public GameObject crate;
     public GameObject tile;
     public int UpdatesPerSecond;
@@ -29,6 +29,51 @@ public class TilemapManager : MonoBehaviour {
 	void Start () {
 		
 	}
+
+    public void setLevel(Tilemap m) {
+        Map = m;
+
+        List<Vector2Int> boxPositions = Map.GetBoxPositions();
+
+
+        ClearTiles ();
+
+        Debug.Log (boxPositions.Count);
+
+        for (int i = 0; i < boxPositions.Count; i++)
+        {
+            GameObject newBox = Instantiate(crate);
+            boxes.Add(newBox);
+            newBox.transform.parent = transform;
+            Box b = Map.tiles [boxPositions [i].x, boxPositions [i].y].box;
+
+            newBox.gameObject.GetComponentInChildren<TMP_Text> ().text = b.steps == 1 ? "" : string.Format("{0}", b.steps);
+
+            b.SetRepresentation (newBox);
+        }
+
+        int emptyTiles = 0;
+        for (int x = 0; x < Map.tiles.GetLength(0); x++)
+        {
+            for (int y = 0; y < Map.tiles.GetLength(1); y++)
+            {
+                if (Map.tiles[x, y].type == Tile.TileType.EMPTY)
+                {
+                    emptyTiles += 1;
+                }
+            }
+        }
+        while (tiles.Count + emptyTiles < Map.tiles.Length)
+        {
+            GameObject newTile = Instantiate(tile);
+            tiles.Add(newTile);
+            newTile.transform.parent = transform;
+        }
+    }
+
+    public Tilemap GetTilemap() {
+        return Map;
+    }
 
     public Vector2Int GetTilePosFromTransformPos(Vector3 pos)
     {
@@ -55,53 +100,20 @@ public class TilemapManager : MonoBehaviour {
         {
             return;
         }
-        List<Vector2Int> boxPositions = Map.GetBoxPositions();
-        while (boxes.Count < boxPositions.Count)
-        {
-            GameObject newBox = Instantiate(crate);
-            boxes.Add(newBox);
-            newBox.transform.parent = transform;
-        }
-        while (boxes.Count > boxPositions.Count)
-        {
-            Destroy(boxes[0]);
-            boxes.RemoveAt(0);
-        }
+            
 
-        for (int i = 0; i < boxPositions.Count; i++)
-        {
-            boxes[i].transform.position = new Vector2(boxPositions[i].x, boxPositions[i].y);
-			int steps = Map.tiles [boxPositions [i].x, boxPositions [i].y].box.steps;
-
-			boxes [i].gameObject.GetComponentInChildren<TMP_Text> ().text = steps == 1 ? "" : string.Format("{0}", steps);
-        }
-        int emptyTiles = 0;
-        for (int x = 0; x < Map.tiles.GetLength(0); x++)
-        {
-            for (int y = 0; y < Map.tiles.GetLength(1); y++)
-            {
-                if (Map.tiles[x, y].type == Tile.TileType.EMPTY)
-                {
-                    emptyTiles += 1;
-                }
-            }
-        }
-        while (tiles.Count + emptyTiles < Map.tiles.Length)
-        {
-            GameObject newTile = Instantiate(tile);
-            tiles.Add(newTile);
-            newTile.transform.parent = transform;
-        }
-        while (tiles.Count + emptyTiles > Map.tiles.Length)
-        {
-            Destroy(tiles[0]);
-            tiles.RemoveAt(0);
-        }
         int n = 0;
+
         for (int x = 0; x < Map.tiles.GetLength(0); x++)
         {
             for (int y = 0; y < Map.tiles.GetLength(1); y++)
             {
+
+                Box b = Map.tiles [x, y].box;
+                if (b != null) {
+                    b.GetRepresentation().transform.position = b.GetPos(new Vector2 (x, y));
+                }
+
                 if (Map.tiles[x, y].type == Tile.TileType.EMPTY)
                     continue;
                 if (Map.tiles[x, y].type == Tile.TileType.BUTTON || Map.tiles[x, y].type == Tile.TileType.BUTTONBLUE)
@@ -114,6 +126,7 @@ public class TilemapManager : MonoBehaviour {
                 SpriteRenderer renderer = tiles[n].GetComponent<SpriteRenderer>();
                 Collider2D collider = tiles[n].GetComponent<Collider2D>();
                 n++;
+
                 switch (Map.tiles[x, y].type)
                 {
                     case Tile.TileType.BUTTON:
@@ -154,20 +167,25 @@ public class TilemapManager : MonoBehaviour {
             }
         }
     }
+
+    IEnumerator PlaySound(AudioClip sound, AudioSource src)
+    {
+        yield return new WaitForSeconds(Box.ACTIONTIME);  
+        src.clip = sound;
+        src.Play ();
+    }
+
+
 	
 	void Update () {
         background.transform.position = new Vector3(Map.tiles.GetLength(0) / 2, Map.tiles.GetLength(1) / 2, 1f);
         background.transform.localScale = new Vector3(Map.tiles.GetLength(0), Map.tiles.GetLength(1), 1f);
         HashSet<Tilemap.GAME_EVENT> events = Map.Step(Time.deltaTime);
         if (events.Contains (Tilemap.GAME_EVENT.BOX_FALL)) {
-            GameObject go = transform.Find ("fall").gameObject;
-            go.GetComponent<AudioSource> ().clip = fallSound;
-            go.GetComponent<AudioSource> ().Play ();
+            StartCoroutine (PlaySound (fallSound, transform.Find ("fall").gameObject.GetComponent<AudioSource> ()));
         }
         if (events.Contains (Tilemap.GAME_EVENT.BUTTON_PRESS)) {
-            GameObject go = transform.Find ("click").gameObject;
-            go.GetComponent<AudioSource> ().clip = pressButtonSound;
-            go.GetComponent<AudioSource> ().Play ();  
+            StartCoroutine (PlaySound (pressButtonSound, transform.Find ("click").gameObject.GetComponent<AudioSource> ()));
         }
         RenderMap();
         if (Map.isWon())

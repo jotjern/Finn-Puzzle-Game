@@ -110,7 +110,7 @@ public class Tilemap {
 
         bool moved = false;
 
-        if (!isInBounds (x, y) || tiles [x, y].box == null || !tiles[x,y].box.doAction()) {
+        if (!isInBounds (x, y) || tiles [x, y].box == null || !tiles[x,y].box.DoAction(new Vector2(x, y))) {
             return false;
         }
 
@@ -192,7 +192,6 @@ public class Tilemap {
         }
         if (tiles[x, y].type == Tile.TileType.DOOR)
         {
-            Debug.Log("Checking if door collidable");
             Vector2Int buttonPos = tiles[x, y].buttonPos;
             if (tiles[buttonPos.x, buttonPos.y].box == null)
             {
@@ -218,9 +217,9 @@ public class Tilemap {
             {
                 if (tiles[x, y].box != null)
                 {
-                    bool readyToStep = tiles [x, y].box.step (dt);
+                    bool readyToStep = tiles [x, y].box.Step (dt);
                     if (readyToStep && MoveBox(x, y, DIRECTION.DOWN)) {
-                        tiles [x, y-1].box.doAction ();
+                        tiles [x, y-1].box.DoAction (new Vector2(x, y));
                         if (IsCollidable (x, y - 2)) {
                             ret.Add (GAME_EVENT.BOX_FALL);
                         }
@@ -252,21 +251,42 @@ public class Box
 	public int steps;
     public float actionTimer = 0f;
     public static readonly float ACTIONTHRESHOLD = 0.001f;
+    public static readonly float ACTIONTIME = 1f / 5;
+    private GameObject representation;
+    private Vector2 movingFrom;
 	public Box (int s = 1) {
 		steps = s;
 	}
 
-    public bool step(float dt) {
+    public bool Step(float dt) {
         actionTimer = Mathf.Max (0, actionTimer - dt);
 
         return actionTimer < ACTIONTHRESHOLD;
     }
 
-    public bool doAction() {
+    public bool DoAction(Vector2 from) {
         if (actionTimer < ACTIONTHRESHOLD) {
-            actionTimer = 1f / 3;
+            movingFrom = from;
+            actionTimer = ACTIONTIME;
             return true;
         }
         return false;
+    }
+
+    public void SetRepresentation(GameObject o) {
+        representation = o;
+    }
+
+    public GameObject GetRepresentation() {
+        return representation;
+    }
+
+    public Vector2 GetPos(Vector2 actual) {
+        if (actionTimer < ACTIONTHRESHOLD) {
+            return actual;
+        }
+        float fromWeight = actionTimer / ACTIONTIME;
+
+        return Vector2.Lerp (actual, movingFrom, fromWeight);
     }
 }

@@ -71,7 +71,7 @@ public class CatController : MonoBehaviour {
                     {
                         TilemapManager tmm = other.transform.parent.GetComponent<TilemapManager>();
                         Vector2Int boxPos = tmm.GetTilePosFromTransformPos(other.transform.position);
-                        if (tmm.Map.PushBox (boxPos.x, boxPos.y, other.transform.position.x > transform.position.x)) {
+                        if (tmm.GetTilemap().PushBox (boxPos.x, boxPos.y, other.transform.position.x > transform.position.x)) {
                             GetComponent<AudioSource> ().clip = moveSound;
                             GetComponent<AudioSource> ().Play ();
                         }

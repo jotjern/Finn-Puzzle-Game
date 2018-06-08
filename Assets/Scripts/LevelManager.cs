@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     void Update () {
-        if (!winCoroutineStarted && tilemapRenderer.Map.isWon())
+        if (!winCoroutineStarted && tilemapRenderer.GetTilemap().isWon())
         {
             StartCoroutine(WinInSeconds(3f));
         }
@@ -53,13 +53,13 @@ public class LevelManager : MonoBehaviour {
     {
         tilemapRenderer.pauseUpdates = true;
         tilemapRenderer.ClearTiles();
-        tilemapRenderer.Map = _LoadLevel(level);
+        tilemapRenderer.setLevel(_LoadLevel(level));
         tilemapRenderer.winText.SetActive(false);
         player.rb.velocity = Vector2.zero;
         player.active = true;
         player.timeSinceLevelLoad = 0;
         tilemapRenderer.pauseUpdates = false;
-        player.transform.position = tilemapRenderer.Map.playerStartPos;
+        player.transform.position = tilemapRenderer.GetTilemap().playerStartPos;
     }
 
     void LoadLevel(int level)
