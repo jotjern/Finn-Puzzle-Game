@@ -60,6 +60,7 @@ public class LevelManager : MonoBehaviour {
         player.timeSinceLevelLoad = 0;
         tilemapRenderer.pauseUpdates = false;
         player.transform.position = tilemapRenderer.GetTilemap().playerStartPos;
+        player.startPosition = tilemapRenderer.GetTilemap().playerStartPos;
     }
 
     void LoadLevel(int level)

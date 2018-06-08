@@ -202,8 +202,14 @@ public class Tilemap {
         return false;
     }
 
-    public bool isWon() {
-        return pressedButtons.FindAll(delegate(Vector2Int pos) { return tiles[pos.x, pos.y].type == Tile.TileType.BUTTON; }).Count == buttonsToWin;
+    public bool isWon()
+    {
+        return pressedButtons.FindAll(delegate (Vector2Int pos) { return tiles[pos.x, pos.y].type == Tile.TileType.BUTTON; }).Count == buttonsToWin;
+    }
+
+    public int GetPressedRedButtonCount()
+    {
+        return pressedButtons.FindAll(delegate (Vector2Int pos) { return tiles[pos.x, pos.y].type == Tile.TileType.BUTTON; }).Count;
     }
 
     public HashSet<GAME_EVENT> Step(float dt)

@@ -12,6 +12,7 @@ public class CatController : MonoBehaviour {
     public bool active = true;
     public float timeSinceLevelLoad;
     public AudioClip moveSound;
+    public Vector3 startPosition;
 
     public GameObject paw;
     public Rigidbody2D rb;
@@ -81,4 +82,12 @@ public class CatController : MonoBehaviour {
             }
         }
 	}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.tag == "Backdrop")
+        {
+            transform.position = startPosition;
+        }
+    }
 }

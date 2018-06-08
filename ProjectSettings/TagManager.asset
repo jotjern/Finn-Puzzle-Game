@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Movable
+  - Backdrop
   layers:
   - Default
   - TransparentFX
