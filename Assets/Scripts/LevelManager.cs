@@ -158,15 +158,16 @@ public class LevelManager : MonoBehaviour {
 
             case Level.Level4:
                 Map = new Tilemap (20, 4, 1);
-                Map.addDoor (new Vector2Int (3, 1), new Vector2Int (7, 1), new Vector2Int (12, 0), new Vector2Int (14, 1));
-                Map.SetBoxTiles (0, 0, 6, 0, Tile.TileType.WALL);
-                Map.SetBoxTiles (8, 0, 10, 0, Tile.TileType.WALL);
-                Map.SetTile (13, 0, Tile.TileType.WALL);
-                Map.SetTile (15, 0, Tile.TileType.WALL);
-                Map.SetTile (17, 0, Tile.TileType.WALL);
-                Map.SetTile (17, 1, Tile.TileType.BUTTON);
-                Map.tiles [3, 1].box = new Box (1);
-                Map.tiles [5, 1].box = new Box (2);
+                Map.addDoor (new Vector2Int (3, 2), new Vector2Int (7, 2), new Vector2Int (12, 1), new Vector2Int (14, 2));
+                Map.SetBoxTiles (0, 1, 6, 1, Tile.TileType.WALL);
+                Map.SetBoxTiles (8, 1, 10, 1, Tile.TileType.WALL);
+                Map.SetTile (13, 1, Tile.TileType.WALL);
+                Map.SetTile (15, 1, Tile.TileType.WALL);
+                Map.SetTile (17, 1, Tile.TileType.WALL);
+                Map.SetTile (17, 2, Tile.TileType.BUTTON);
+                Map.SetBoxTiles (0, 0, 17, 0, Tile.TileType.WALL);
+                Map.tiles [3, 2].box = new Box (1);
+                Map.tiles [5, 2].box = new Box (2);
 
 
                 break;
