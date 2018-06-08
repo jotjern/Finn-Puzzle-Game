@@ -193,7 +193,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &170243650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,8 +1003,8 @@ MonoBehaviour:
     type: 3}
   buttonNotPressedSprite: {fileID: 21300000, guid: e29ea6c1393e5144ebc9abc18c3d67af,
     type: 3}
-  wallSprite: {fileID: 21300000, guid: 42a7d31a42d55584bb23cf88793159e6, type: 3}
-  doorSprite: {fileID: 21300000, guid: e96019c17e6d023438964997d855c9e8, type: 3}
+  wallSprite: {fileID: 21300000, guid: 032339c75b0b4d44c9427dbf89c3e507, type: 3}
+  doorSprite: {fileID: 21300000, guid: 1960a8fec16c28d4f9425d553b68dd18, type: 3}
   doorSpriteOpen: {fileID: 21300000, guid: 4b49a147928ba80478223d445d026adf, type: 3}
   buttonPressedSpriteBlue: {fileID: 21300000, guid: db057b03935c1e74bbc179bf03c4e5ef,
     type: 3}
@@ -2332,7 +2332,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.55}
+  m_Offset: {x: 0, y: -601.8692}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2343,7 +2343,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.1}
+  m_Size: {x: 1, y: 1202.7384}
   m_EdgeRadius: 0
 --- !u!1 &1508033951
 GameObject:

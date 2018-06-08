@@ -13,6 +13,8 @@ public class LevelManager : MonoBehaviour {
     public enum Level
     {
         Sample=0,
+        Tutorial1,
+        Tutorial2,
         Level1,
         Level2,
         Level3,
@@ -89,6 +91,23 @@ public class LevelManager : MonoBehaviour {
                 Map.SetBoxTiles(0, 8, 15, 8, Tile.TileType.WALL);
                 Map.tiles[7, 9].buttonPos = new Vector2Int(4, 9);
                 Map.SetTile(6, 9, Tile.TileType.EMPTY, true);
+                break;
+            case Level.Tutorial1:
+                Map = new Tilemap(16, 16, 1, new Vector2Int(0, 12));
+                Map.SetBoxTiles(0, 10, 5, 10, Tile.TileType.WALL);
+                Map.SetTile(2, 11, Tile.TileType.EMPTY, true);
+                Map.SetTile(4, 11, Tile.TileType.BUTTON);
+
+                break;
+            case Level.Tutorial2:
+                Map = new Tilemap(16, 16, 1, new Vector2Int(0, 12));
+                Map.SetBoxTiles(0, 10, 5, 10, Tile.TileType.WALL);
+                Map.SetTile(2, 11, Tile.TileType.EMPTY, true);
+                Map.addDoor(new Vector2Int(4, 11), new Vector2Int(7, 13));
+                Map.SetTile(7, 14, Tile.TileType.EMPTY, true);
+                Map.SetTile(7, 7, Tile.TileType.BUTTON);
+                Map.SetTile(7, 6, Tile.TileType.WALL);
+
                 break;
             case Level.Level1:
                 Map = new Tilemap(20, 20, 2, new Vector2(1, 9));
