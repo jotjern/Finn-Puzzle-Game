@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour {
 
     public enum Level
     {
-        Sample=0,
+        Sample,
         Tutorial1,
         Tutorial2,
         Level1,
