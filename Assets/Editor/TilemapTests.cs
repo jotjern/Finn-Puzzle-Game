@@ -63,6 +63,8 @@ public class TilemapTests {
     {
         foreach (LevelManager.Level level in System.Enum.GetValues(typeof(LevelManager.Level)))
         {
+            if (level == LevelManager.Level.GameFinish)
+                continue;
             Assert.IsNotNull(LevelManager._LoadLevel(level));
         }
     }
