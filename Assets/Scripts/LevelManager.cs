@@ -91,7 +91,6 @@ public class LevelManager : MonoBehaviour {
                 Map.SetTile(6, 9, Tile.TileType.EMPTY, true);
                 break;
             case Level.Level1:
-                Debug.Log("Loading level 1");
                 Map = new Tilemap(20, 20, 2, new Vector2(1, 9));
                 Map.SetBoxTiles(0, 0, 5, 0, Tile.TileType.WALL);
                 Map.SetTile(0, 1, Tile.TileType.BUTTON);
@@ -112,7 +111,6 @@ public class LevelManager : MonoBehaviour {
                 break;
 
             case Level.Level2:
-                Debug.Log("Loading level 2");
                 Map = new Tilemap(16, 16, 2, new Vector2(1, 9));
                 Map.addDoor (new Vector2Int (5, 9), new Vector2Int (5, 10));
                 Map.SetBoxTiles(0, 8, 15, 8, Tile.TileType.WALL);
@@ -125,7 +123,6 @@ public class LevelManager : MonoBehaviour {
 
                 break;
             case Level.Level3:
-                Debug.Log ("Loading level 3");
                 Map = new Tilemap (16, 16, 3, new Vector2 (1, 9));
                 Map.SetBoxTiles (0, 6, 7, 6, Tile.TileType.WALL);
                 Map.SetBoxTiles (3, 7, 3, 8, Tile.TileType.EMPTY, true);

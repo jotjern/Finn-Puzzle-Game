@@ -38,8 +38,6 @@ public class TilemapManager : MonoBehaviour {
 
         ClearTiles ();
 
-        Debug.Log (boxPositions.Count);
-
         for (int i = 0; i < boxPositions.Count; i++)
         {
             GameObject newBox = Instantiate(crate);
