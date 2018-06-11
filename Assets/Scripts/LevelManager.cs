@@ -199,7 +199,7 @@ public class LevelManager : MonoBehaviour {
                 break;
 
             case Level.Level6:
-                Map = new Tilemap(16, 16, 2, new Vector2Int(6, 12));
+                Map = new Tilemap(16, 16, 2, new Vector2Int(8, 10));
 
                 Map.SetTile(4, 13, Tile.TileType.EMPTY, true);
                 Map.tiles[6, 12].box = new Box(2);
